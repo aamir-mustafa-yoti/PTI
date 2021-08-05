@@ -7,7 +7,6 @@ import numpy as np
 import torch
 # from torch.autograd import Variable
 
-from lpips.trainer import *
 from lpips.lpips import *
 
 # class PerceptualLoss(torch.nn.Module):

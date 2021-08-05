@@ -5,7 +5,6 @@ import torch
 import torch.nn as nn
 from torch.autograd import Variable
 from . import pretrained_networks as pn
-import torch.nn
 import lpips
 
 def spatial_average(in_tens, keepdim=True):
@@ -141,7 +140,7 @@ class BCERankingLoss(nn.Module):
         super(BCERankingLoss, self).__init__()
         self.net = Dist2LogitLayer(chn_mid=chn_mid)
         # self.parameters = list(self.net.parameters())
-        self.loss = torch.nn.BCELoss()
+        self.loss = nn.BCELoss()
 
     def forward(self, d0, d1, judge):
         per = (judge+1.)/2.

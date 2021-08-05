@@ -49,16 +49,20 @@ class SingleIDCoach(BaseCoach):
             log_images_counter = 0
             real_images_batch = image.to(global_config.device)
 
-            for i in tqdm(range(hyperparameters.max_pti_steps)):
+            for _ in tqdm(range(hyperparameters.max_pti_steps)):
 
                 generated_images = self.forward(w_pivot)
 
-                loss, l1_loss_val, l2_loss_val, loss_lpips = self.calc_loss(i, generated_images,
+                loss, l1_loss_val, l2_loss_val, loss_lpips = self.calc_loss(generated_images,
                     real_images_batch, image_name, self.G, use_ball_holder, w_pivot)
 
                 self.optimizer.zero_grad()
 
                 if loss_lpips <= hyperparameters.LPIPS_value_threshold:
+                    print("[INFO] LPIPS loss: ", loss_lpips)
+                    break
+                elif l2_loss_val <= hyperparameters.L2_value_threshold:
+                    print("[INFO] L2 loss: ", l2_loss_val)
                     break
 
                 loss.backward()
@@ -74,6 +78,6 @@ class SingleIDCoach(BaseCoach):
 
             self.image_counter += 1
 
-            print("[INFO] loss: ", loss)
+            torch.save(self.G, os.path.join(paths_config.checkpoints_dir, f'{global_config.run_name}_{image_name}.pt'))
 
-            torch.save(self.G, f'{paths_config.checkpoints_dir}/model_{global_config.run_name}_{image_name}.pt')
+        print("[INFO] loss: ", loss)

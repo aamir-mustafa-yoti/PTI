@@ -11,14 +11,12 @@ from training.coaches.single_id_coach import SingleIDCoach
 from utils.ImagesDataset import ImagesDataset
 
 
-def run_PTI(run_name='', use_wandb=False, use_multi_id_training=False):
+def run_PTI(use_wandb=False, use_multi_id_training=False):  # Hyung-Kwon Ko fixed
     os.environ['CUDA_DEVICE_ORDER'] = 'PCI_BUS_ID'
     os.environ['CUDA_VISIBLE_DEVICES'] = global_config.cuda_visible_devices
 
-    if run_name == '':
-        global_config.run_name = ''.join(choice(ascii_uppercase) for i in range(12))
-    else:
-        global_config.run_name = run_name
+    if global_config.run_name == '':  # Hyung-Kwon Ko fixed
+        global_config.run_name = ''.join(choice(ascii_uppercase) for i in range(12))  # Hyung-Kwon Ko fixed
 
     if use_wandb:
         run = wandb.init(project=paths_config.pti_results_keyword, reinit=True, name=global_config.run_name)
@@ -45,4 +43,4 @@ def run_PTI(run_name='', use_wandb=False, use_multi_id_training=False):
 
 
 if __name__ == '__main__':
-    run_PTI(run_name='', use_wandb=False, use_multi_id_training=False)
+    run_PTI(use_wandb=False, use_multi_id_training=False)

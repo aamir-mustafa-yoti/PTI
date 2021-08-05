@@ -110,7 +110,7 @@ class BaseCoach:
 
         return optimizer
 
-    def calc_loss(self, i, generated_images, real_images, log_name, new_G, use_ball_holder, w_batch):
+    def calc_loss(self, generated_images, real_images, log_name, new_G, use_ball_holder, w_batch):
         loss = 0.0
         l1_loss_val = 1.0  # HYUNG-KWON KO CHANGED
         l2_loss_val = 1.0  # HYUNG-KWON KO CHANGED
@@ -138,17 +138,6 @@ class BaseCoach:
         if use_ball_holder and hyperparameters.use_locality_regularization:
             ball_holder_loss_val = self.space_regulizer.space_regulizer_loss(new_G, w_batch, use_wandb=self.use_wandb)
             loss += ball_holder_loss_val
-
-        # if i > 800:
-        #     loss_lpips = self.lpips_loss(generated_images, real_images)
-        #     loss_lpips = torch.squeeze(loss_lpips)
-        #     if self.use_wandb:
-        #         wandb.log({f'LPIPS_loss_val_{log_name}': loss_lpips.detach().cpu()}, step=global_config.training_step)
-        #     loss += loss_lpips * hyperparameters.pt_lpips_lambda
-        # l2_loss_val = l2_loss(generated_images, real_images)
-        # if self.use_wandb:
-        #     wandb.log({f'MSE_loss_val_{log_name}': l2_loss_val.detach().cpu()}, step=global_config.training_step)
-        # loss += l2_loss_val * hyperparameters.pt_l2_lambda
 
         return loss, l1_loss_val, l2_loss_val, loss_lpips
 

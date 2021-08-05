@@ -12,13 +12,14 @@ regulizer_lpips_lambda = 0.1
 regulizer_alpha = 30
 
 ## Loss
+pt_l1_lambda = 1
 pt_l2_lambda = 1
 pt_lpips_lambda = 1
 pt_lpips_layers = [0, 1, 2, 3, 4]
-pt_l1_lambda = 1
 
 ## Steps
 LPIPS_value_threshold = 0.06
+L2_value_threshold = 0.03
 max_pti_steps = 350
 first_inv_steps = 450
 max_images_to_invert = 30

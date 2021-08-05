@@ -15,7 +15,7 @@ if __name__ == "__main__":
     elif args.mtype == 'mixing':
         ckpt = os.path.join('pretrained_models', 'network-snapshot-mixing-010080.pkl')
     elif args.mtype == 'xflip':
-        ckpt = os.path.join('pretrained_models', 'network-snapshot-xflip-017095.pkl')
+        ckpt = os.path.join('pretrained_models', 'network-snapshot-xflip-020643.pkl')
     else:
         raise AssertionError('check pretrained model type')
 

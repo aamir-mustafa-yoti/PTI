@@ -16,18 +16,20 @@ image_name = '336944_15'
 use_multi_id_training = False
 
 global_config.device = 'cuda'
+global_config.run_name = 'model'
 paths_config.input_data_id = image_dir_name
 paths_config.input_data_path = f'{image_dir_name}_original'
 paths_config.checkpoints_dir = 'checkpoints'
 
 # paths_config.stylegan2_ada_ffhq = os.path.join(save_path, 'network-snapshot-008467.pkl')
 # factor_path = os.path.join(save_path, 'default-all.pt')
-paths_config.stylegan2_ada_ffhq = os.path.join(save_path, 'network-snapshot-xflip-017095.pkl')
+paths_config.stylegan2_ada_ffhq = os.path.join(save_path, 'network-snapshot-xflip-020643.pkl')
+# paths_config.stylegan2_ada_ffhq = os.path.join(save_path, 'network-snapshot-xflip-017095.pkl')
 factor_path = os.path.join(save_path, 'xflip-all.pt')
 # paths_config.stylegan2_ada_ffhq = os.path.join(save_path, 'network-snapshot-mixing-010080.pkl')
 # factor_path = os.path.join(save_path, 'mixing-all.pt')
 
-hyperparameters.use_last_w_pivots = False
+hyperparameters.use_last_w_pivots = True
 hyperparameters.max_pti_steps = 350
 hyperparameters.pti_learning_rate = 3e-4
 hyperparameters.pt_lpips_lambda = 1
@@ -57,7 +59,7 @@ if __name__ == '__main__':
     with open(paths_config.stylegan2_ada_ffhq, 'rb') as f:
         old_G = pickle.load(f)['G_ema'].cuda()
 
-    with open(os.path.join(paths_config.checkpoints_dir, f'model_{model_id}_{generator_type}.pt'), 'rb') as f_new: 
+    with open(os.path.join(paths_config.checkpoints_dir, f'{model_id}_{generator_type}.pt'), 'rb') as f_new: 
         new_G = torch.load(f_new).cuda()
 
     w_path_dir = os.path.join(paths_config.embedding_base_dir, paths_config.input_data_id)
@@ -72,4 +74,4 @@ if __name__ == '__main__':
             new_image = new_G.synthesis(w_pivot + direction, noise_mode='const', force_fp32=True)
             save_image(old_image, f"old_{i}_{j}")
             save_image(new_image, f"new_{i}_{j}")
-            print(f"(degree: {degree}): {j}-th image saved")
+        print(f"[INFO] {i}-th eigvec image saved")
