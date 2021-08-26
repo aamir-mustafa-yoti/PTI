@@ -5,14 +5,15 @@ from PIL import Image
 from configs import paths_config, hyperparameters, global_config
 from scripts.run_pti import run_PTI
 
-ix = [0, 1, 2, 3, 4]
+# ix = [0, 1, 2, 3, 4]
+ix = [i for i in range(3)]
 # degrees = [-6, -4, -2, 0, 2, 4, 6]
 degrees = [-3, -2, -1, 0, 1, 2, 3]
 
 save_path = 'pretrained_models'
 image_dir_name = 'image'
 out_dir = 'results'
-image_name = '336944_15'
+image_name = 'img2'
 use_multi_id_training = False
 
 global_config.device = 'cuda'
@@ -29,11 +30,16 @@ factor_path = os.path.join(save_path, 'xflip-all.pt')
 # paths_config.stylegan2_ada_ffhq = os.path.join(save_path, 'network-snapshot-mixing-010080.pkl')
 # factor_path = os.path.join(save_path, 'mixing-all.pt')
 
-hyperparameters.use_last_w_pivots = True
+hyperparameters.use_last_w_pivots = False
 hyperparameters.max_pti_steps = 350
 hyperparameters.pti_learning_rate = 3e-4
-hyperparameters.pt_lpips_lambda = 1
+hyperparameters.pt_lpips_lambda = 0
 hyperparameters.pt_lpips_layers = [0, 1, 2, 3]
+hyperparameters.lpips_type = 'vgg16_bn_webtoon_128_0.0001_1e-05_0.9'
+# hyperparameters.lpips_type = 'vgg'
+
+hyperparameters.first_inv_type = 'w'
+hyperparameters.n_avg_samples = 10000
 
 
 def save_image(img, name):
@@ -58,6 +64,12 @@ if __name__ == '__main__':
 
     with open(paths_config.stylegan2_ada_ffhq, 'rb') as f:
         old_G = pickle.load(f)['G_ema'].cuda()
+
+    # with open(paths_config.stylegan2_ada_ffhq, 'rb') as f:
+    #     old_G = pickle.load(f)
+    # torch.save(old_G, 'model.pt')
+    # print(old_G)
+    # exit()
 
     with open(os.path.join(paths_config.checkpoints_dir, f'{model_id}_{generator_type}.pt'), 'rb') as f_new: 
         new_G = torch.load(f_new).cuda()

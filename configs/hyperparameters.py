@@ -25,6 +25,7 @@ first_inv_steps = 450
 max_images_to_invert = 30
 
 ## Optimization
+n_avg_samples = 10000
 pti_learning_rate = 3e-4
 first_inv_lr = 5e-3
 train_batch_size = 1

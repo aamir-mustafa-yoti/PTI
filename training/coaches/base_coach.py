@@ -7,7 +7,7 @@ from criteria.localitly_regulizer import Space_Regulizer
 import torch
 from torchvision import transforms
 from lpips import LPIPS
-from training.projectors import w_projector
+from training.projectors import w_projector, z_projector
 from configs import global_config, paths_config, hyperparameters
 from criteria.losses import l1_loss, l2_loss
 from models.e4e.psp import pSp
@@ -88,16 +88,24 @@ class BaseCoach:
     def calc_inversions(self, image, image_name):
 
         if hyperparameters.first_inv_type == 'w+':
-            print("[INFO] Use w+ space")
+            print("[INFO] Use W+ space")
             w = self.get_e4e_inversion(image)
 
-        else:
-            print("[INFO] Use w space")
+        elif hyperparameters.first_inv_type == 'w':
+            print("[INFO] Use W space")
             id_image = torch.squeeze((image.to(global_config.device) + 1) / 2) * 255
-            w = w_projector.project(self.G, id_image, device=torch.device(global_config.device), w_avg_samples=600,
+            w = w_projector.project(self.G, id_image, device=torch.device(global_config.device),
+                                    w_avg_samples=hyperparameters.n_avg_samples,
                                     num_steps=hyperparameters.first_inv_steps, w_name=image_name,
                                     use_wandb=self.use_wandb)
-            print("[INFO] w.shape: ", w.shape)
+
+        elif hyperparameters.first_inv_type == 'z':
+            print("[INFO] Use Z space")
+            id_image = torch.squeeze((image.to(global_config.device) + 1) / 2) * 255
+            w = z_projector.project(self.G, id_image, device=torch.device(global_config.device),
+                                    w_avg_samples=hyperparameters.n_avg_samples,
+                                    num_steps=hyperparameters.first_inv_steps, w_name=image_name,
+                                    use_wandb=self.use_wandb)
 
         return w
 
